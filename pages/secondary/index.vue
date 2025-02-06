@@ -1,35 +1,40 @@
 <template>
 	<view class="content">
-		<tabbar></tabbar>
+
 		<u-navbar title="话术" :safeAreaInsetTop="true" bgColor="#007bff" :placeholder="true" height="60">
-			<view class="u-nav-slot" slot="left"></view>
+			<view class="u-nav-slot" slot="left">
+				<u-icon name="arrow-left" size="28" color="#fff" @click="back"></u-icon>
+			</view>
 			<view class="u-nav-slot" slot="center"></view>
 			<view class="u-nav-slot" slot="right">
 				<u-text text="新增分类" color="#fff" @click="addCategory"></u-text>
 			</view>
 		</u-navbar>
 		<br>
-		
-		<view v-for="item in categorylist" :key="item.id" style="width: calc(100% - 40rpx); margin-top: 20rpx; border-radius: 10rpx; padding: 20rpx; box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);">
-			<u-swipe-action>
-				<u-swipe-action-item :options="[
-					{
-						text: '删除',
-						style: {
-							backgroundColor: '#f56c6c'
-						}
-					}
-				]" @click="handleDelete(item)">
-					<u-cell :border="false" :title="item.catogery" v-if="item.catogery != '<EMPTY>'" :isLink="true" arrow-direction="right" @click="handleClick(item)"></u-cell>
-				</u-swipe-action-item>
-			</u-swipe-action>
+		<view style="width: calc(100% - 40rpx); margin-top: 20rpx; border-radius: 10rpx; padding: 20rpx; ">
+			<u-text text="关键字" color="#007bff" size="15" align="left"></u-text>
+			<u-text :text="catogery_name" size="15" align="left"></u-text>
 		</view>
-		<u-modal :show="show" :title="title"  @confirm="confirm" @close="close" showCancelButton @cancel="close">
-			<view>
-				<u-input v-model="content" placeholder="请输入分类名称" />
+		<view v-for="item in categorylist" :key="item.id" style="width: calc(100% - 40rpx); margin-top: 20rpx;">
+			<view v-if="item.secondary_catogory != '<EMPTY>'"
+				style="border-radius: 10rpx; padding: 20rpx; box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1); ">
+				<u-swipe-action>
+					<u-swipe-action-item :options="[
+			{
+				text: '删除',
+				style: {
+					backgroundColor: '#f56c6c'
+				}
+			}
+		]" @click="handleDelete(item)">
+						<u-cell :border="false" :title="item.secondary_catogory" :isLink="true" arrow-direction="right"
+							@click="handleClick(item)"></u-cell>
+					</u-swipe-action-item>
+				</u-swipe-action>
 			</view>
-		</u-modal>
-		
+		</view>
+
+
 	</view>
 </template>
 
@@ -38,16 +43,19 @@ import tabbar from '@/components/tabbar/tabbar.vue'
 export default {
 	data() {
 		return {
-			categorylist: ['礼物','开场白','互动','结束语','其他','话术','其他'],
+			categorylist: ['礼物', '开场白', '互动', '结束语', '其他', '话术', '其他'],
 			show: false,
 			title: '',
-			content: ''
+			content: '',
+			catogery_id: -1,
+			catogery_name: ''
 		}
 	},
 	components: {
 		tabbar
 	},
-	onLoad() { 
+	onLoad(options) {
+		this.catogery_id = options.id
 		uni.hideTabBar()
 		this.refreshData()
 	},
@@ -57,11 +65,17 @@ export default {
 	methods: {
 		refreshData() {
 			uni.$api.request('/ccscript', 'GET').then(res => {
-				this.categorylist = res //catogery 去重
+				const catogery_name = res.find(item => item.id == this.catogery_id).catogery
+				this.categorylist = res
+				this.catogery_name = catogery_name
 				this.categorylist = this.categorylist.filter((item, index, self) => {
-					return self.findIndex(t => t.catogery === item.catogery) === index
+					return item.catogery == catogery_name
 				})
-				console.log('刷新数据成功', res)
+				//根据secondary_catogory 去重
+				this.categorylist = this.categorylist.filter((item, index, self) => {
+					return self.findIndex(t => t.secondary_catogory === item.secondary_catogory) === index
+				})
+				console.log('刷新数据成功', this.categorylist)
 				uni.stopPullDownRefresh()
 			}).catch(err => {
 				console.error('刷新失败', err)
@@ -77,8 +91,8 @@ export default {
 			console.log('确认')
 			uni.$api.request('/ccscript', 'POST', {
 				id: -1,
-				catogery: this.content,
-				secondary_catogory: "<EMPTY>",
+				catogery: this.catogery_name,
+				secondary_catogory: this.content,
 				content: "<EMPTY>",
 				priority: 0,
 				f_gender: 0,
@@ -123,8 +137,11 @@ export default {
 		handleClick(item) {
 			console.log('点击', item)
 			uni.navigateTo({
-				url: `/pages/secondary/index?id=${item.id}`
+				url: `/pages/contentedit/contentedit?id=${item.id}`
 			})
+		},
+		back() {
+			uni.navigateBack()
 		}
 	}
 }
@@ -138,5 +155,4 @@ export default {
 	justify-content: center;
 	margin: 0 20rpx;
 }
-
 </style>

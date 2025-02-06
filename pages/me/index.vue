@@ -24,8 +24,8 @@
 		<br>
 		<view
 			style="margin-top: 20rpx; width: calc(100% - 60rpx); display: flex; justify-content: space-between; align-items: center; border-radius: 20rpx;  padding: 30rpx; box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);">
-			<view>
-				<u-text text="绑定抖音号" size="18" bold="true"></u-text>
+			<view @click="bindDouyin()">
+				<u-text text="绑定抖音号" size="18" :bold="true"></u-text>
 				<u-text text="绑定后开始直播" size="16" style="margin-top: 10rpx;"></u-text>
 			</view>
 			<view style="display: flex; justify-content: flex-end;">
@@ -35,13 +35,13 @@
 
 		<view
 			style="margin-top: 20rpx; width: calc(100% - 60rpx); display: flex; flex-direction: column; justify-content: space-between; align-items: center; border-radius: 20rpx;  padding: 30rpx; box-shadow: 0 0 10rpx rgba(0, 0, 0, 0.1);">
-			<u-text text="其他功能" size="18" bold="true"></u-text>
+			<u-text text="其他功能" size="18" :bold="true"></u-text>
 			<br>
 			<view style="width: 100%;">
 				<u-grid :border="false" @click="click" col="4" align="center" >
 					<u-grid-item v-for="(baseListItem, baseListIndex) in otherList" :key="baseListIndex">
 						<u-icon :customStyle="{ paddingTop: 20 + 'rpx' }" :name="baseListItem.name" :size="30"></u-icon>
-						<text class="grid-text" style="text-wrap: nowrap;">{{ baseListItem.title }}</text>
+						<text class="grid-text" style="text-wrap: nowrap;font-size: 14px;">{{ baseListItem.title }}</text>
 					</u-grid-item>
 				</u-grid>
 			</view>
@@ -106,9 +106,25 @@ export default {
 	methods: {
 		toLive() {
 			console.log('去开播')
+			uni.navigateTo({
+				url: '/pages/index/index'
+			})
 		},
 		logout() {
 			console.log('退出登录')
+			uni.removeStorageSync('token')
+			uni.navigateTo({
+				url: '/pages/login/login'
+			})
+		},
+		click(e) {
+			console.log(e)
+		},
+		bindDouyin() {
+			console.log('绑定抖音号')
+			uni.navigateTo({
+				url: '/pages/bind/bind'
+			})
 		}
 	}
 }

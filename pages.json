@@ -1,10 +1,19 @@
 {
 	"pages": [ 
 		{
+			"path" : "pages/login/login",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationStyle": "custom" ,
-				"navigationBarTextStyle": "white" 
+				"navigationBarTextStyle": "white",
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
 			}
 		},
 		{
@@ -18,14 +27,47 @@
 			"path": "pages/speechcraft/index",
 			"style": {
 				"navigationStyle": "custom" ,
-				"navigationBarTextStyle": "white" 
+				"navigationBarTextStyle": "white" ,
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
 			}
 		},
 		{
-			"path" : "pages/login/login",
+			"path" : "pages/bind/bind",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationStyle": "custom" ,
+				"navigationBarTextStyle": "white" ,
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
+			}
+		},
+		{
+			"path": "pages/secondary/index",
+			"style":{
+				"navigationStyle": "custom" ,
+				"navigationBarTextStyle": "white" ,
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
+			}
+		},
+		{
+			"path": "pages/contentedit/contentedit",
+			"style":{
+				"navigationStyle": "custom" ,
+				"navigationBarTextStyle": "white" ,
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
+			}
+		},
+		{
+			"path" : "pages/contentedit/edit/edit",
+			"style" : 
+			{
+				"navigationStyle": "custom" ,
+				"navigationBarTextStyle": "white" ,
+				
+				"backgroundTextStyle": "dark"
 			}
 		}
 	],
